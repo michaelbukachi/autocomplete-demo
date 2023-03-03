@@ -31,6 +31,11 @@ async def index():
 async def get_names_autocomplete_list(prefix: str = ''):
     if prefix:
         key = 'names_list'
+        # We have to load the autocomplete list into memory
+        # since there's no way, currently, to do a
+        # 'startswith' check on a redis list
+        # This means that the autocomplete list should be
+        # reasonably sized.
         names = redis.lrange(key, 0, -1)
         matches = []
         for name in names:
