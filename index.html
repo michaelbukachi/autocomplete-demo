@@ -22,12 +22,12 @@
         remote
         reserve-keyword
         :remote-method="getDropdownValues"
-        @change="performSearch"
+        @change="doSearch"
     >
       <el-option
           v-for="item in options"
           :key="item.value"
-          :label="item.value"
+          :label="item.label"
           :value="item.value"
       ></el-option>
     </el-select>
@@ -51,7 +51,7 @@
       async getDropdownValues(text) {
         if (text) {
           const res = await axios.get(`/autocomplete?prefix=${text}`)
-          this.options = res.data.map(item => ({value: item}))
+          this.options = res.data.map(item => ({value: item.id, label: item.name}))
         } else {
           this.options = []
         }
