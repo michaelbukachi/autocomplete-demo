@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Autocomplete demo</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <script src="https://unpkg.com/vue@next"></script>
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-plus"></script>
+</head>
+<body>
+<h3>Autocomplete demo</h3>
+<div id="app">
+  <div class="m-4">
+    <el-select
+        v-model="value"
+        placeholder="Select"
+        size="large"
+        filterable
+        remote
+        reserve-keyword
+        :remote-method="getDropdownValues"
+        @change="performSearch"
+    >
+      <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.value"
+          :value="item.value"
+      ></el-option>
+    </el-select>
+  </div>
+</div>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  const {createApp} = Vue
+  const app = createApp({
+    data() {
+      return {
+        options: [],
+        value: ''
+      }
+    },
+    methods: {
+      doSearch(val) {
+        // Perform actual search
+        console.log(val)
+      },
+      async getDropdownValues(text) {
+        if (text) {
+          const res = await axios.get(`/autocomplete?prefix=${text}`)
+          this.options = res.data.map(item => ({value: item}))
+        } else {
+          this.options = []
+        }
+      }
+    }
+  })
+  app.use(ElementPlus)
+  app.mount('#app')
+</script>
+</body>
+</html>
